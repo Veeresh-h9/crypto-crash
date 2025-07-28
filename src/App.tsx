@@ -20,7 +20,8 @@ interface CryptoPrices {
   ETH: number;
 }
 
-const BACKEND_URL = "https://crash-game-setup.onrender.com";
+const BACKEND_URL = "http://localhost:3001";
+
 function App() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [gameState, setGameState] = useState<GameState>({

@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
@@ -6,29 +5,24 @@ const cors = require("cors");
 const { MongoClient } = require("mongodb");
 const crypto = require("crypto");
 const axios = require("axios");
-const BACKEND_URL = "https://crash-game-setup.onrender.com";
+
 const app = express();
-app.use(express.json());
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://crashgame69.netlify.app",
+    origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
 // Middleware
-app.use(
-  cors({
-    origin: "https://crashgame69.netlify.app",
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(express.json());
+
 // Configuration
-const PORT = process.env.PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT || 3001;
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/crypto-crash";
 
 // Global variables
 let db;
@@ -49,20 +43,19 @@ let priceUpdateInterval;
 // Connect to MongoDB
 async function connectDB() {
   try {
-    console.log("Connecting to MongoDB with URI:", process.env.MONGODB_URI);
-    const client = new MongoClient(process.env.MONGODB_URI);
+    const client = new MongoClient(MONGODB_URI);
     await client.connect();
     db = client.db();
     console.log("✅ Connected to MongoDB");
 
     // Create collections if they don't exist
-    await db.createCollection("users").catch(() => {});
     await db.createCollection("wallets").catch(() => {});
     await db.createCollection("rounds").catch(() => {});
     await db.createCollection("transactions").catch(() => {});
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
-    db = undefined;
+    // Continue without database for testing
+    console.log("⚠️ Running without database");
   }
 }
 
@@ -357,7 +350,6 @@ app.post("/api/bet", async (req, res) => {
 
 // User login/register
 app.post("/api/login", async (req, res) => {
-  console.log("DB is:", db); // Add this line
   const { username, password } = req.body;
   if (!username || !password)
     return res
