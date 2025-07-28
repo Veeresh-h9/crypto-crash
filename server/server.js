@@ -49,7 +49,8 @@ let priceUpdateInterval;
 // Connect to MongoDB
 async function connectDB() {
   try {
-    const client = new MongoClient(MONGODB_URI);
+    console.log("Connecting to MongoDB with URI:", process.env.MONGODB_URI);
+    const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     db = client.db();
     console.log("✅ Connected to MongoDB");
@@ -61,8 +62,7 @@ async function connectDB() {
     await db.createCollection("transactions").catch(() => {});
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
-    // Continue without database for testing
-    console.log("⚠️ Running without database");
+    db = undefined;
   }
 }
 
@@ -357,6 +357,7 @@ app.post("/api/bet", async (req, res) => {
 
 // User login/register
 app.post("/api/login", async (req, res) => {
+  console.log("DB is:", db); // Add this line
   const { username, password } = req.body;
   if (!username || !password)
     return res
