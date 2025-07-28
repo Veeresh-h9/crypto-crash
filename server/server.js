@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const axios = require("axios");
 const BACKEND_URL = "https://crash-game-setup.onrender.com";
 const app = express();
+app.use(express.json());
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -24,6 +25,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json());
 // Configuration
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
