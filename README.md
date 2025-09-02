@@ -1,4 +1,5 @@
 # Crypto Crash Game - Full Stack Implementation
+## Access the Application - https://crashgame69.netlify.app/
 
 A real-time multiplayer crash game with cryptocurrency integration built with Node.js, Express, MongoDB, and React. Players bet in USD, which gets converted to cryptocurrency using live prices, and try to cash out before the game crashes.
 
